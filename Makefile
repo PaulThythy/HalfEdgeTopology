@@ -27,5 +27,5 @@ clean:
 		rm -rf $(BINDIR)
 
 mrproper: clean
-		rm -rf $(BINDIR)$(EXEC)
+		rm -rf $(EXEC)
 
