@@ -78,6 +78,24 @@ void initMesh() {
     // TODO
     // build haldEdges of "ExMesh" from indices tables tabHe, tabFace, tabVertex
     //***********************************************
+
+    // create vertices
+    for(int i = 0; i < NBVERTICES; i++){
+        Vertex* vertex = new Vertex("v"+to_string(i), tabVertex[i][0], tabVertex[i][1], tabVertex[i][2]);
+        ExMesh->m_vertices.push_back(vertex);
+    }
+
+    // create faces
+    for(int i = 0; i < NBFACES; i++){
+        Face* face = new Face("f"+to_string(i));
+        ExMesh->m_faces.push_back(face);
+    }
+
+    // create halfEdges
+    for(int i = 0; i < NBHALFEDGES; i++){
+        HalfEdge* he = new HalfEdge("e"+to_string(i));
+        ExMesh->m_hedges.push_back(he);
+    }
 }
 
 

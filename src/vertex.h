@@ -16,8 +16,8 @@ struct Vertex {
     string m_name;
 
     inline Vertex() {}
-    inline Vertex(double x, double y, double z): 
-                    m_x(x), m_y(y), m_z(z) {}
+    inline Vertex(string name, double x, double y, double z): 
+                    m_name(name), m_x(x), m_y(y), m_z(z) {}
     inline Vertex(string name, double x, double y, double z, HalfEdge* oneHe):
                     m_name(name), m_x(x), m_y(y), m_z(z), m_oneHe(oneHe) {}
     
