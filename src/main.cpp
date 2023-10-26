@@ -37,7 +37,7 @@ Mesh* ExMesh;
 
 //---------------------------------------
 void initMesh() {
-    int tabHe[NBHALFEDGES][5] = {// vertex, he, face, next, prev for each halfedges
+    int tabHe[NBHALFEDGES][5] = { // vertex, heTwin, face, next, prev for each halfedges
         {1, 18, 0, 1, 2},
         {3, 11, 0, 2, 0},
         {4, 3, 0, 0, 1},
@@ -134,7 +134,7 @@ void displayHalfEdge(void)
 {
     //**********************************************************************
     // TODO
-    // Visualisation of "ExMesh"
+    // Visualisation of "ExMesh" with GLVertex
     //**********************************************************************
 }
 
