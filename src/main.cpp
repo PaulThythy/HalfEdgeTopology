@@ -74,13 +74,14 @@ void initMesh() {
         {3, 0, 0, 14}};
 
     ExMesh = new Mesh() ;
-    //***********************************************
-    // TODO
-    // build haldEdges of "ExMesh" from indices tables tabHe, tabFace, tabVertex
-    //***********************************************
 
-    // create vertices
-    for(int i = 0; i < NBVERTICES; i++){
+    // create vertices (vertices numbered from 1 to NBVERTICES !)
+    for(int i = 0; i <= NBVERTICES; i++){
+        if(i==0){
+            Vertex* nullV = nullptr;
+            ExMesh->m_vertices.push_back(nullV);
+
+        }  
         Vertex* vertex = new Vertex("v"+to_string(i), tabVertex[i][0], tabVertex[i][1], tabVertex[i][2]);
         ExMesh->m_vertices.push_back(vertex);
     }
@@ -96,6 +97,152 @@ void initMesh() {
         HalfEdge* he = new HalfEdge("e"+to_string(i));
         ExMesh->m_hedges.push_back(he);
     }
+
+    ExMesh->m_hedges.at(0)->m_vertex = ExMesh->m_vertices.at(1); 
+    ExMesh->m_hedges.at(0)->m_heTwin = ExMesh->m_hedges.at(18);
+    ExMesh->m_hedges.at(0)->m_face = ExMesh->m_faces.at(0);
+    ExMesh->m_hedges.at(0)->m_heNext = ExMesh->m_hedges.at(1);
+    ExMesh->m_hedges.at(0)->m_hePrev = ExMesh->m_hedges.at(2);
+
+    ExMesh->m_hedges.at(1)->m_vertex = ExMesh->m_vertices.at(3); 
+    ExMesh->m_hedges.at(1)->m_heTwin = ExMesh->m_hedges.at(11);
+    ExMesh->m_hedges.at(1)->m_face = ExMesh->m_faces.at(0);
+    ExMesh->m_hedges.at(1)->m_heNext = ExMesh->m_hedges.at(2);
+    ExMesh->m_hedges.at(1)->m_hePrev = ExMesh->m_hedges.at(0);
+
+    ExMesh->m_hedges.at(2)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(2)->m_heTwin = ExMesh->m_hedges.at(3);
+    ExMesh->m_hedges.at(2)->m_face = ExMesh->m_faces.at(0);
+    ExMesh->m_hedges.at(2)->m_heNext = ExMesh->m_hedges.at(0);
+    ExMesh->m_hedges.at(2)->m_hePrev = ExMesh->m_hedges.at(1);
+
+    ExMesh->m_hedges.at(3)->m_vertex = ExMesh->m_vertices.at(1); 
+    ExMesh->m_hedges.at(3)->m_heTwin = ExMesh->m_hedges.at(2);
+    ExMesh->m_hedges.at(3)->m_face = ExMesh->m_faces.at(1);
+    ExMesh->m_hedges.at(3)->m_heNext = ExMesh->m_hedges.at(4);
+    ExMesh->m_hedges.at(3)->m_hePrev = ExMesh->m_hedges.at(5);
+
+    ExMesh->m_hedges.at(4)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(4)->m_heTwin = ExMesh->m_hedges.at(6);
+    ExMesh->m_hedges.at(4)->m_face = ExMesh->m_faces.at(1);
+    ExMesh->m_hedges.at(4)->m_heNext = ExMesh->m_hedges.at(5);
+    ExMesh->m_hedges.at(4)->m_hePrev = ExMesh->m_hedges.at(3);
+
+    ExMesh->m_hedges.at(5)->m_vertex = ExMesh->m_vertices.at(2); 
+    ExMesh->m_hedges.at(5)->m_heTwin = ExMesh->m_hedges.at(19);
+    ExMesh->m_hedges.at(5)->m_face = ExMesh->m_faces.at(1);
+    ExMesh->m_hedges.at(5)->m_heNext = ExMesh->m_hedges.at(3);
+    ExMesh->m_hedges.at(5)->m_hePrev = ExMesh->m_hedges.at(4);
+
+    ExMesh->m_hedges.at(6)->m_vertex = ExMesh->m_vertices.at(2); 
+    ExMesh->m_hedges.at(6)->m_heTwin = ExMesh->m_hedges.at(4);
+    ExMesh->m_hedges.at(6)->m_face = ExMesh->m_faces.at(2);
+    ExMesh->m_hedges.at(6)->m_heNext = ExMesh->m_hedges.at(7);
+    ExMesh->m_hedges.at(6)->m_hePrev = ExMesh->m_hedges.at(8);
+
+    ExMesh->m_hedges.at(7)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(7)->m_heTwin = ExMesh->m_hedges.at(17);
+    ExMesh->m_hedges.at(7)->m_face = ExMesh->m_faces.at(2);
+    ExMesh->m_hedges.at(7)->m_heNext = ExMesh->m_hedges.at(8);
+    ExMesh->m_hedges.at(7)->m_hePrev = ExMesh->m_hedges.at(6);
+
+    ExMesh->m_hedges.at(8)->m_vertex = ExMesh->m_vertices.at(5); 
+    ExMesh->m_hedges.at(8)->m_heTwin = ExMesh->m_hedges.at(20);
+    ExMesh->m_hedges.at(8)->m_face = ExMesh->m_faces.at(2);
+    ExMesh->m_hedges.at(8)->m_heNext = ExMesh->m_hedges.at(6);
+    ExMesh->m_hedges.at(8)->m_hePrev = ExMesh->m_hedges.at(7);
+
+    ExMesh->m_hedges.at(9)->m_vertex = ExMesh->m_vertices.at(3); 
+    ExMesh->m_hedges.at(9)->m_heTwin = ExMesh->m_hedges.at(21);
+    ExMesh->m_hedges.at(9)->m_face = ExMesh->m_faces.at(3);
+    ExMesh->m_hedges.at(9)->m_heNext = ExMesh->m_hedges.at(10);
+    ExMesh->m_hedges.at(9)->m_hePrev = ExMesh->m_hedges.at(11);
+
+    ExMesh->m_hedges.at(10)->m_vertex = ExMesh->m_vertices.at(6); 
+    ExMesh->m_hedges.at(10)->m_heTwin = ExMesh->m_hedges.at(12);
+    ExMesh->m_hedges.at(10)->m_face = ExMesh->m_faces.at(3);
+    ExMesh->m_hedges.at(10)->m_heNext = ExMesh->m_hedges.at(11);
+    ExMesh->m_hedges.at(10)->m_hePrev = ExMesh->m_hedges.at(9);
+
+    ExMesh->m_hedges.at(11)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(11)->m_heTwin = ExMesh->m_hedges.at(1);
+    ExMesh->m_hedges.at(11)->m_face = ExMesh->m_faces.at(3);
+    ExMesh->m_hedges.at(11)->m_heNext = ExMesh->m_hedges.at(9);
+    ExMesh->m_hedges.at(11)->m_hePrev = ExMesh->m_hedges.at(10);
+
+    ExMesh->m_hedges.at(12)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(12)->m_heTwin = ExMesh->m_hedges.at(10);
+    ExMesh->m_hedges.at(12)->m_face = ExMesh->m_faces.at(4);
+    ExMesh->m_hedges.at(12)->m_heNext = ExMesh->m_hedges.at(13);
+    ExMesh->m_hedges.at(12)->m_hePrev = ExMesh->m_hedges.at(14);
+
+    ExMesh->m_hedges.at(13)->m_vertex = ExMesh->m_vertices.at(6); 
+    ExMesh->m_hedges.at(13)->m_heTwin = ExMesh->m_hedges.at(22);
+    ExMesh->m_hedges.at(13)->m_face = ExMesh->m_faces.at(4);
+    ExMesh->m_hedges.at(13)->m_heNext = ExMesh->m_hedges.at(14);
+    ExMesh->m_hedges.at(13)->m_hePrev = ExMesh->m_hedges.at(12);
+
+    ExMesh->m_hedges.at(14)->m_vertex = ExMesh->m_vertices.at(7); 
+    ExMesh->m_hedges.at(14)->m_heTwin = ExMesh->m_hedges.at(15);
+    ExMesh->m_hedges.at(14)->m_face = ExMesh->m_faces.at(4);
+    ExMesh->m_hedges.at(14)->m_heNext = ExMesh->m_hedges.at(12);
+    ExMesh->m_hedges.at(14)->m_hePrev = ExMesh->m_hedges.at(13);
+
+    ExMesh->m_hedges.at(15)->m_vertex = ExMesh->m_vertices.at(4); 
+    ExMesh->m_hedges.at(15)->m_heTwin = ExMesh->m_hedges.at(14);
+    ExMesh->m_hedges.at(15)->m_face = ExMesh->m_faces.at(5);
+    ExMesh->m_hedges.at(15)->m_heNext = ExMesh->m_hedges.at(16);
+    ExMesh->m_hedges.at(15)->m_hePrev = ExMesh->m_hedges.at(17);
+
+    ExMesh->m_hedges.at(16)->m_vertex = ExMesh->m_vertices.at(7); 
+    ExMesh->m_hedges.at(16)->m_heTwin = ExMesh->m_hedges.at(23);
+    ExMesh->m_hedges.at(16)->m_face = ExMesh->m_faces.at(5);
+    ExMesh->m_hedges.at(16)->m_heNext = ExMesh->m_hedges.at(17);
+    ExMesh->m_hedges.at(16)->m_hePrev = ExMesh->m_hedges.at(15);
+
+    ExMesh->m_hedges.at(17)->m_vertex = ExMesh->m_vertices.at(5); 
+    ExMesh->m_hedges.at(17)->m_heTwin = ExMesh->m_hedges.at(7);
+    ExMesh->m_hedges.at(17)->m_face = ExMesh->m_faces.at(5);
+    ExMesh->m_hedges.at(17)->m_heNext = ExMesh->m_hedges.at(15);
+    ExMesh->m_hedges.at(17)->m_hePrev = ExMesh->m_hedges.at(16);
+
+    ExMesh->m_hedges.at(18)->m_vertex = ExMesh->m_vertices.at(3); 
+    ExMesh->m_hedges.at(18)->m_heTwin = ExMesh->m_hedges.at(0);
+    ExMesh->m_hedges.at(18)->m_face = nullptr;
+    ExMesh->m_hedges.at(18)->m_heNext = ExMesh->m_hedges.at(19);
+    ExMesh->m_hedges.at(18)->m_hePrev = ExMesh->m_hedges.at(21);
+
+    ExMesh->m_hedges.at(19)->m_vertex = ExMesh->m_vertices.at(1); 
+    ExMesh->m_hedges.at(19)->m_heTwin = ExMesh->m_hedges.at(5);
+    ExMesh->m_hedges.at(19)->m_face = nullptr;
+    ExMesh->m_hedges.at(19)->m_heNext = ExMesh->m_hedges.at(20);
+    ExMesh->m_hedges.at(19)->m_hePrev = ExMesh->m_hedges.at(18);
+
+    ExMesh->m_hedges.at(20)->m_vertex = ExMesh->m_vertices.at(2); 
+    ExMesh->m_hedges.at(20)->m_heTwin = ExMesh->m_hedges.at(8);
+    ExMesh->m_hedges.at(20)->m_face = nullptr;
+    ExMesh->m_hedges.at(20)->m_heNext = ExMesh->m_hedges.at(23);
+    ExMesh->m_hedges.at(20)->m_hePrev = ExMesh->m_hedges.at(19);
+
+    ExMesh->m_hedges.at(21)->m_vertex = ExMesh->m_vertices.at(6); 
+    ExMesh->m_hedges.at(21)->m_heTwin = ExMesh->m_hedges.at(9);
+    ExMesh->m_hedges.at(21)->m_face = nullptr;
+    ExMesh->m_hedges.at(21)->m_heNext = ExMesh->m_hedges.at(18);
+    ExMesh->m_hedges.at(21)->m_hePrev = ExMesh->m_hedges.at(22);
+
+    ExMesh->m_hedges.at(22)->m_vertex = ExMesh->m_vertices.at(7); 
+    ExMesh->m_hedges.at(22)->m_heTwin = ExMesh->m_hedges.at(13);
+    ExMesh->m_hedges.at(22)->m_face = nullptr;
+    ExMesh->m_hedges.at(22)->m_heNext = ExMesh->m_hedges.at(21);
+    ExMesh->m_hedges.at(22)->m_hePrev = ExMesh->m_hedges.at(23);
+
+    ExMesh->m_hedges.at(23)->m_vertex = ExMesh->m_vertices.at(5); 
+    ExMesh->m_hedges.at(23)->m_heTwin = ExMesh->m_hedges.at(16);
+    ExMesh->m_hedges.at(23)->m_face = nullptr;
+    ExMesh->m_hedges.at(23)->m_heNext = ExMesh->m_hedges.at(22);
+    ExMesh->m_hedges.at(23)->m_hePrev = ExMesh->m_hedges.at(20);
+
+
 }
 
 
@@ -132,10 +279,16 @@ void initOpenGl()
 //------------------------------------------------------
 void displayHalfEdge(void)
 {
-    //**********************************************************************
-    // TODO
-    // Visualisation of "ExMesh" with GLVertex
-    //**********************************************************************
+    for(int i = 0;i < NBHALFEDGES; i++){
+        HalfEdge* he = ExMesh->m_hedges[i];
+        Vertex* v1 = he->m_vertex;
+        Vertex* v2 = he->m_heNext->m_vertex;
+
+        glBegin(GL_LINES);
+        glVertex3f(v1->m_x, v1->m_y, v1->m_z);
+        glVertex3f(v2->m_x, v2->m_y, v2->m_z);
+        glEnd();
+    }
 }
 
 int main(int argc, char **argv)
