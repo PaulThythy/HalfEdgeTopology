@@ -170,7 +170,7 @@ void initOpenGl()
 //------------------------------------------------------
 void displayHalfEdge(void)
 {
-    for(int i = 0;i < NBHALFEDGES; i++){
+    for(int i = 0; i < NBHALFEDGES; i++){
         HalfEdge* he = ExMesh->m_hedges[i];
         Vertex* v1 = he->m_vertex;
         Vertex* v2 = he->m_heNext->m_vertex;
@@ -181,6 +181,24 @@ void displayHalfEdge(void)
         glEnd();
     }
 }
+
+//------------------------------------------------------
+void displayMeshEdges(void){
+    for(int i = 0; i < NBHALFEDGES; i++){
+        HalfEdge* he = ExMesh->m_hedges[i];
+        if(he->m_face == nullptr){
+            Vertex* v1 = he->m_vertex;
+            Vertex* v2 = he->m_heNext->m_vertex;
+
+            glBegin(GL_LINES);
+            glColor3f(1.0, 0.0, 0.0);
+            glVertex3f(v1->m_x, v1->m_y, v1->m_z);
+            glVertex3f(v2->m_x, v2->m_y, v2->m_z);
+            glEnd();
+        }
+    }
+}
+
 
 int main(int argc, char **argv)
 {
@@ -243,8 +261,9 @@ void display(void)
     //--------------------------------
     display_basis();
     //--------------------------------
-    displayHalfEdge();
+    //displayHalfEdge();
     //--------------------------------
+    displayMeshEdges();
 
     glPopMatrix();
     /* force result display */
