@@ -78,12 +78,9 @@ void initMesh() {
     ExMesh = new Mesh() ;
 
     // create vertices (vertices numbered from 1 to NBVERTICES !)
-    for(int i = 0; i <= NBVERTICES; i++){
-        if(i==0){
-            Vertex* nullV = nullptr;
-            ExMesh->m_vertices.push_back(nullV);
-
-        }  
+    Vertex* nullV = nullptr;
+    ExMesh->m_vertices.push_back(nullV);
+    for(int i = 0; i <= NBVERTICES; i++){  
         Vertex* vertex = new Vertex("v"+to_string(i), tabVertex[i][0], tabVertex[i][1], tabVertex[i][2]);
         ExMesh->m_vertices.push_back(vertex);
     }
