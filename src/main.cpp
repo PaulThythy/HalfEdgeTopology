@@ -5,6 +5,8 @@
 #include "objFile.h"
 
 #include <iostream>
+#include <algorithm>
+#include <array>
 #include <stdlib.h>
 #include <vector>
 #include <sstream>
@@ -80,6 +82,7 @@ void initMesh() {
     // create vertices (vertices numbered from 1 to NBVERTICES !)
     Vertex* nullV = nullptr;
     ExMesh->m_vertices.push_back(nullV);
+
     for(int i = 0; i <= NBVERTICES; i++){  
         Vertex* vertex = new Vertex("v"+to_string(i), tabVertex[i][0], tabVertex[i][1], tabVertex[i][2]);
         ExMesh->m_vertices.push_back(vertex);
@@ -181,7 +184,7 @@ void displayHalfEdge(void)
 
 //------------------------------------------------------
 void displayMeshEdges(void){
-    for(int i = 0; i < NBHALFEDGES; i++){
+    /*for(int i = 0; i < NBHALFEDGES; i++){
         HalfEdge* he = ExMesh->m_hedges[i];
         if(he->m_face == nullptr){
             Vertex* v1 = he->m_vertex;
@@ -192,6 +195,30 @@ void displayMeshEdges(void){
             glVertex3f(v1->m_x, v1->m_y, v1->m_z);
             glVertex3f(v2->m_x, v2->m_y, v2->m_z);
             glEnd();
+        }
+    }*/
+
+    std::vector<HalfEdge*> visitedHes;
+
+    for(const Face* face : ExMesh->m_faces){
+        HalfEdge* currentHe = face->m_oneHe;
+
+        while(currentHe){               //while different from nullptr
+            //if current he and its twin not found in visited ones
+            if( std::find(visitedHes.begin(), visitedHes.end(), currentHe) == visitedHes.end() &&
+                std::find(visitedHes.begin(), visitedHes.end(), currentHe->m_heTwin) == visitedHes.end()){
+                
+                //add he and its twin to visited ones
+                visitedHes.push_back(currentHe);
+                visitedHes.push_back(currentHe->m_heTwin);
+
+                glBegin(GL_LINES);
+                glVertex3d(currentHe->m_vertex->m_x, currentHe->m_vertex->m_y, currentHe->m_vertex->m_z);
+                glVertex3d(currentHe->m_heNext->m_vertex->m_x, currentHe->m_heNext->m_vertex->m_y, currentHe->m_heNext->m_vertex->m_z);
+                glEnd();
+            }
+
+            currentHe = currentHe->m_heNext;
         }
     }
 }
@@ -258,9 +285,9 @@ void display(void)
     //--------------------------------
     display_basis();
     //--------------------------------
-    //displayHalfEdge();
+    displayHalfEdge();
     //--------------------------------
-    displayMeshEdges();
+    //displayMeshEdges();
 
     glPopMatrix();
     /* force result display */
