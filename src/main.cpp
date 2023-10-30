@@ -170,40 +170,13 @@ void initOpenGl()
 //------------------------------------------------------
 void displayHalfEdge(void)
 {
-    for(int i = 0; i < NBHALFEDGES; i++){
-        HalfEdge* he = ExMesh->m_hedges[i];
-        Vertex* v1 = he->m_vertex;
-        Vertex* v2 = he->m_heNext->m_vertex;
-
-        glBegin(GL_LINES);
-        glVertex3f(v1->m_x, v1->m_y, v1->m_z);
-        glVertex3f(v2->m_x, v2->m_y, v2->m_z);
-        glEnd();
-    }
-}
-
-//------------------------------------------------------
-void displayMeshEdges(void){
-    /*for(int i = 0; i < NBHALFEDGES; i++){
-        HalfEdge* he = ExMesh->m_hedges[i];
-        if(he->m_face == nullptr){
-            Vertex* v1 = he->m_vertex;
-            Vertex* v2 = he->m_heNext->m_vertex;
-
-            glBegin(GL_LINES);
-            glColor3f(1.0, 0.0, 0.0);
-            glVertex3f(v1->m_x, v1->m_y, v1->m_z);
-            glVertex3f(v2->m_x, v2->m_y, v2->m_z);
-            glEnd();
-        }
-    }*/
-
     std::vector<HalfEdge*> visitedHes;
 
     for(const Face* face : ExMesh->m_faces){
+        HalfEdge* startHe = face->m_oneHe;
         HalfEdge* currentHe = face->m_oneHe;
 
-        while(currentHe){               //while different from nullptr
+        do{
             //if current he and its twin not found in visited ones
             if( std::find(visitedHes.begin(), visitedHes.end(), currentHe) == visitedHes.end() &&
                 std::find(visitedHes.begin(), visitedHes.end(), currentHe->m_heTwin) == visitedHes.end()){
@@ -219,6 +192,23 @@ void displayMeshEdges(void){
             }
 
             currentHe = currentHe->m_heNext;
+        }while(currentHe!=startHe);                 //while current he different from start he
+    }
+}
+
+//------------------------------------------------------
+void displayMeshEdges(void){
+    for(int i = 0; i < NBHALFEDGES; i++){
+        HalfEdge* he = ExMesh->m_hedges[i];
+        if(he->m_face == nullptr){
+            Vertex* v1 = he->m_vertex;
+            Vertex* v2 = he->m_heNext->m_vertex;
+
+            glBegin(GL_LINES);
+            glColor3f(1.0, 0.0, 0.0);
+            glVertex3f(v1->m_x, v1->m_y, v1->m_z);
+            glVertex3f(v2->m_x, v2->m_y, v2->m_z);
+            glEnd();
         }
     }
 }
