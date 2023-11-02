@@ -129,12 +129,30 @@ void initMesh() {
 
 //----------------------------------------------------------------------------------
 void initHalfEdge(int heIndex, int vertexIndex, int heTwinIndex, int faceIndex, int heNextIndex, int hePrevIndex){
+    //init he with the vertex
     ExMesh->m_hedges.at(heIndex)->m_vertex = ExMesh->m_vertices.at(vertexIndex);
+    //init vertex with the he 
+    ExMesh->m_vertices.at(vertexIndex)->m_oneHe = ExMesh->m_hedges.at(heIndex);
+
+    //no need to init the twin because all he will be visited
     ExMesh->m_hedges.at(heIndex)->m_heTwin = ExMesh->m_hedges.at(heTwinIndex);
-    if(faceIndex == -1) ExMesh->m_hedges.at(heIndex)->m_face = nullptr;
-    else ExMesh->m_hedges.at(heIndex)->m_face = ExMesh->m_faces.at(faceIndex);
+
+
+    if(faceIndex == -1){
+        ExMesh->m_hedges.at(heIndex)->m_face = nullptr;
+    }
+    else{
+        //init face with face index
+        ExMesh->m_hedges.at(heIndex)->m_face = ExMesh->m_faces.at(faceIndex);
+        //init face with the he
+        ExMesh->m_faces.at(faceIndex)->m_oneHe = ExMesh->m_hedges.at(heIndex);
+    } 
+
+    //no need to init the next and prev because all he will be visited
     ExMesh->m_hedges.at(heIndex)->m_heNext = ExMesh->m_hedges.at(heNextIndex);
     ExMesh->m_hedges.at(heIndex)->m_hePrev = ExMesh->m_hedges.at(hePrevIndex);
+
+
 }
 
 //----------------------------------------------------------------------------------
@@ -173,26 +191,27 @@ void displayHalfEdge(void)
     std::vector<HalfEdge*> visitedHes;
 
     for(const Face* face : ExMesh->m_faces){
-        HalfEdge* startHe = face->m_oneHe;
-        HalfEdge* currentHe = face->m_oneHe;
+        if(face != nullptr){
+            HalfEdge* startHe = face->m_oneHe;
+            HalfEdge* currentHe = face->m_oneHe;
 
-        do{
-            //if current he and its twin not found in visited ones
-            if( std::find(visitedHes.begin(), visitedHes.end(), currentHe) == visitedHes.end() &&
-                std::find(visitedHes.begin(), visitedHes.end(), currentHe->m_heTwin) == visitedHes.end()){
-                
-                //add he and its twin to visited ones
-                visitedHes.push_back(currentHe);
-                visitedHes.push_back(currentHe->m_heTwin);
+            do{
+                //if the twin of the current he has not been visited, we draw the current he
+                if( std::find(visitedHes.begin(), visitedHes.end(), currentHe->m_heTwin) == visitedHes.end() ){
+                    
+                    //add current he into the list
+                    visitedHes.push_back(currentHe);
 
-                glBegin(GL_LINES);
-                glVertex3d(currentHe->m_vertex->m_x, currentHe->m_vertex->m_y, currentHe->m_vertex->m_z);
-                glVertex3d(currentHe->m_heNext->m_vertex->m_x, currentHe->m_heNext->m_vertex->m_y, currentHe->m_heNext->m_vertex->m_z);
-                glEnd();
-            }
+                    glBegin(GL_LINES);
+                    glVertex3d(currentHe->m_vertex->m_x, currentHe->m_vertex->m_y, currentHe->m_vertex->m_z);
+                    glVertex3d(currentHe->m_heNext->m_vertex->m_x, currentHe->m_heNext->m_vertex->m_y, currentHe->m_heNext->m_vertex->m_z);
+                    glEnd();
+                }
 
-            currentHe = currentHe->m_heNext;
-        }while(currentHe!=startHe);                 //while current he different from start he
+                currentHe = currentHe->m_heNext;
+            }while(currentHe!=startHe);                 //while current he different from start he
+        }
+        
     }
 }
 
