@@ -61,7 +61,7 @@ struct OBJFile{
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
                     m_tabVertices.push_back(vertex);
 
-                    //cout << "v" << nbVertices << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
+                    cout << "v" << nbVertices << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
                 }
 
                 if(carLine == 'f'){
@@ -72,11 +72,11 @@ struct OBJFile{
                     }
                     m_tabFaces.push_back(face);
 
-                    /*cout << "f" << nbFaces << " : ";
+                    cout << "f" << nbFaces << " : ";
                     for(int i = 0; i < face->m_fVertices.size(); i++){
                         cout << face->m_fVertices.at(i) << " ";
                     }
-                    cout << endl;*/
+                    cout << endl;
                     nbFaces++;
                 }
             }

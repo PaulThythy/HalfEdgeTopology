@@ -37,6 +37,7 @@ void initHalfEdge(int, int, int, int, int, int);
 #define NBVERTICES 7
 #define NBHALFEDGES 24
 Mesh* ExMesh;
+OBJFile* objFile;
 
 
 //---------------------------------------
@@ -78,6 +79,8 @@ void initMesh() {
         {3, 0, 0, 14}};
 
     ExMesh = new Mesh() ;
+    objFile = new OBJFile("../ressources/test.obj");
+    objFile->readData();
 
     // create vertices (vertices numbered from 1 to NBVERTICES !)
     Vertex* nullV = nullptr;
