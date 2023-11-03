@@ -10,58 +10,79 @@ using namespace std;
 
 typedef struct
 {
-    int vIndex ;
-    int heTwinIndex ;
-    int faceIndex ;
-    int heNextIndex ;
-    int hePrevIndex ;
+    int m_vIndex ;
+    int m_heTwinIndex ;
+    int m_faceIndex ;
+    int m_heNextIndex ;
+    int m_hePrevIndex ;
 } HeStruct;
 
 typedef struct
 {
-    double x,y,z ;
-    int heIndex ;
+    double m_x,m_y,m_z ;
+    int m_heIndex ;
 } VStruct;
 
 typedef struct
 {
-    int v0, v1, v2 ;
+    vector<int> m_fVertices;
     int heIndex ;
 } FStruct;
 
 struct OBJFile{
-    vector<HeStruct*> tabHalfEdges;
-    vector<FStruct*> tabFaces;
-    vector<VStruct*> tabVertices;
-    string m_filename;
+    vector<HeStruct*> m_tabHalfEdges;
+    vector<FStruct*> m_tabFaces;
+    vector<VStruct*> m_tabVertices;
+    string m_filePath;
 
-    inline OBJFile() {}
-
-    inline OBJFile(string fileName): m_filename(fileName) {}
+    inline OBJFile(string filePath): m_filePath(filePath) {}
     inline ~OBJFile() {}
 
     inline void readData() {
         string line;
-        int nbVertices(0), nbFaces(0);
+        int nbVertices = 0;
+        int nbFaces = 0;
 
-        ifstream myfile("test.obj");
+        VStruct* nullV = nullptr;
+        m_tabVertices.push_back(nullV);
+
+        ifstream myfile(this->m_filePath);
         if(myfile.is_open()){
             while(getline(myfile, line)){
-                float x, y, z;
                 char carLine;
                 
-                cout << line << '\n';
                 istringstream istr(line);
-                istr >> carLine >> x >> y >> z ;
+                istr >> carLine;
 
-                //*************************************
-                // TODO
-                // stock data into data a structure
-                //*************************************
+                if(carLine == 'v'){
+                    nbVertices++;
+
+                    VStruct* vertex = new VStruct(); 
+                    istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
+                    m_tabVertices.push_back(vertex);
+
+                    //cout << "v" << nbVertices << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
+                }
+
+                if(carLine == 'f'){
+                    FStruct* face = new FStruct();
+                    int vertexIndex;
+                    while(istr >> vertexIndex){
+                        face->m_fVertices.push_back(vertexIndex);
+                    }
+                    m_tabFaces.push_back(face);
+
+                    /*cout << "f" << nbFaces << " : ";
+                    for(int i = 0; i < face->m_fVertices.size(); i++){
+                        cout << face->m_fVertices.at(i) << " ";
+                    }
+                    cout << endl;*/
+                    nbFaces++;
+                }
             }
             myfile.close();
         }
-        else cout << "Unable to open file";
+        else cout << "Unable to open file\n";
 
         this->constructTopology();
     }
