@@ -82,7 +82,7 @@ struct OBJFile{
             }
             myfile.close();
         }
-        else cout << "Unable to open file\n";
+        else cout << "Unable to open file" << endl;
 
         this->constructTopology();
     }
