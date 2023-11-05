@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
     vector<int> m_fVertices;
-    int heIndex ;
+    int m_heIndex ;
 } FStruct;
 
 struct OBJFile{
@@ -61,7 +61,7 @@ struct OBJFile{
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
                     m_tabVertices.push_back(vertex);
 
-                    cout << "v" << nbVertices << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
+                    //cout << "v" << nbVertices << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
                 }
 
                 if(carLine == 'f'){
@@ -72,11 +72,11 @@ struct OBJFile{
                     }
                     m_tabFaces.push_back(face);
 
-                    cout << "f" << nbFaces << " : ";
+                    /*cout << "f" << nbFaces << " : ";
                     for(int i = 0; i < face->m_fVertices.size(); i++){
                         cout << face->m_fVertices.at(i) << " ";
                     }
-                    cout << endl;
+                    cout << endl;*/
                     nbFaces++;
                 }
             }
@@ -88,9 +88,27 @@ struct OBJFile{
     }
 
     inline void constructTopology(){
-        //************************************************
-        // TODO
-        // exploit obj file datas to build the index tab
-        //************************************************
+        for(size_t i = 0; i < m_tabFaces.size(); i++){
+
+            //browse all vertices of a face
+            for(size_t j = 1; j <= m_tabFaces[i]->m_fVertices.size(); j++){
+                //create the two vertices of an he
+                int indexV1 = m_tabFaces[i]->m_fVertices[j];
+                int indexV2 = m_tabFaces[i]->m_fVertices[(j+1) % m_tabFaces[i]->m_fVertices.size()];
+
+                HeStruct* he1 = new HeStruct();
+                HeStruct* he2 = new HeStruct();
+
+                //associate starting vertices to their he
+                he1->m_vIndex = indexV1;
+                he2->m_vIndex = indexV2;
+
+                //associate face index to the he
+                he1->m_faceIndex = i;
+                he2->m_faceIndex = i;
+
+                
+            }
+        }
     }
 };
