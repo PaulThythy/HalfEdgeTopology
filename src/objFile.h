@@ -81,6 +81,7 @@ struct OBJFile{
                         
                         //each time we find a new vertex in a face, we create an he
                         HeStruct* he = new HeStruct();
+                        he->m_heName = "e" + to_string(heCounter);
                         m_tabHalfEdges.push_back(he);
 
                         he->m_faceIndex = facesCounter;
@@ -187,9 +188,8 @@ struct OBJFile{
     }
 
     inline void printVertices(){
-        //to not print the empty vertex at the first index
-        for(int i = 1; i <= this->m_tabVertices.size(); i++){
-            printVertex(this->m_tabVertices.at(i));
+        for(VStruct* vertex : this->m_tabVertices){
+            printVertex(vertex);
         }
     }
 };
