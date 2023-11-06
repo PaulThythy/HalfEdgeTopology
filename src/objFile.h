@@ -65,7 +65,6 @@ struct OBJFile{
 
                     VStruct* vertex = new VStruct(); 
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
-
                     vertex->m_vName = "v" + to_string(verticesCounter);
                     m_tabVertices.push_back(vertex);
                 }
@@ -100,15 +99,23 @@ struct OBJFile{
         }
         else cout << "Unable to open file" << endl;
 
-        this->printVertices();
-        this->printFaces();
-        this->printHalfEdges();
+        //this->printVertices();
+        //this->printFaces();
+        //this->printHalfEdges();
 
         this->constructTopology();
     }
 
     inline void constructTopology(){
-        
+        for(FStruct* face : m_tabFaces){
+            for(int i = 0; i < face->m_fVertices.size(); i++){
+
+                int indexV1 = face->m_fVertices.at(i);
+                int indexV2 = face->m_fVertices.at((i+1) % face->m_fVertices.size());
+
+
+            }
+        }
     }
 
     inline void printHalfEdge(const HeStruct* he){
