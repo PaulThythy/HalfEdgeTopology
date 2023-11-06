@@ -21,14 +21,14 @@ typedef struct
 typedef struct
 {
     double m_x,m_y,m_z ;            //done
-    int m_heIndex ;                 
+    int m_heIndex ;                 //done        
     string m_vName ;                //done
 } VStruct;
 
 typedef struct
 {
     vector<int> m_fVertices ;       //done
-    int m_oneHeIndex ;                
+    int m_oneHeIndex ;              //done
     string m_fName ;                //done
 } FStruct;
 
@@ -87,6 +87,8 @@ struct OBJFile{
                         he->m_faceIndex = facesCounter;
                         he->m_vIndex = vertexIndex;
 
+                        face->m_oneHeIndex = heCounter;
+
                         m_tabVertices.at(vertexIndex)->m_heIndex = heCounter;
 
                         heCounter++;
@@ -106,25 +108,7 @@ struct OBJFile{
     }
 
     inline void constructTopology(){
-        /*for(size_t i = 0; i < m_tabFaces.size(); i++){
-
-            //browse all vertices of a face
-            for(size_t j = 1; j <= m_tabFaces[i]->m_fVertices.size(); j++){
-                
-                int vertexIndex = m_tabFaces[i]->m_fVertices[j];
-
-                HeStruct* he = new HeStruct();
-
-                he1->m_vIndex = indexV1;
-
-                //associate face index to the he
-                he1->m_faceIndex = i;
-                he2->m_faceIndex = i;
-
-                //associate he next and prev to the he
-                he1->m_heNextIndex = 
-            }
-        }*/
+        
     }
 
     inline void printHalfEdge(const HeStruct* he){
