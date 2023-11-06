@@ -12,24 +12,24 @@ typedef struct
 {
     int m_vIndex ;                  //done
     int m_heTwinIndex ;
-    int m_faceIndex ;
+    int m_faceIndex ;               //done
     int m_heNextIndex ;
     int m_hePrevIndex ;
-    string m_heName;                //done
+    string m_heName ;               //done
 } HeStruct;
 
 typedef struct
 {
     double m_x,m_y,m_z ;            //done
-    int m_heIndex ;                 //done
+    int m_heIndex ;                 
     string m_vName ;                //done
 } VStruct;
 
 typedef struct
 {
     vector<int> m_fVertices ;       //done
-    int m_oneHeIndex ;                 
-    string m_fName;                 //done
+    int m_oneHeIndex ;                
+    string m_fName ;                //done
 } FStruct;
 
 struct OBJFile{
