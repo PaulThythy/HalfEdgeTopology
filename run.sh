@@ -1,5 +1,6 @@
 #!/bin/bash
 
+make mrproper
 make
 
 if [ $? -eq 0 ]; then

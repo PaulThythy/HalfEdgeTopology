@@ -43,13 +43,15 @@ struct OBJFile{
 
     inline void readData() {
         string line;
-        int verticesCounter, facesCounter = 0;
+        int verticesCounter = 0;
+        int facesCounter = 0;
 
         //adding an empty vertex to the index 0
         VStruct* nullV = nullptr;
         m_tabVertices.push_back(nullV);
 
         ifstream myfile(this->m_filePath);
+        
         if(myfile.is_open()){
             while(getline(myfile, line)){
                 char carLine;
@@ -62,11 +64,10 @@ struct OBJFile{
 
                     VStruct* vertex = new VStruct(); 
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
-                    vertex->m_vName = "v" + verticesCounter;
+                    vertex->m_vName = "v" + to_string(verticesCounter);
                     m_tabVertices.push_back(vertex);
 
-                    this->printVertex(vertex);
-                    //cout << "v" << verticesCounter << " : x=" << vertex->m_x << ", y=" << vertex->m_y << ", z=" << vertex->m_z << endl; 
+                    this->printVertex(vertex); 
                 }
                 
                 if(carLine == 'f'){
