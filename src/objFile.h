@@ -10,26 +10,26 @@ using namespace std;
 
 typedef struct
 {
-    int m_vIndex ;
+    int m_vIndex ;                  //done
     int m_heTwinIndex ;
     int m_faceIndex ;
     int m_heNextIndex ;
     int m_hePrevIndex ;
-    string m_heName;
+    string m_heName;                //done
 } HeStruct;
 
 typedef struct
 {
-    double m_x,m_y,m_z ;
-    int m_heIndex ;
-    string m_vName ;
+    double m_x,m_y,m_z ;            //done
+    int m_heIndex ;                 //done
+    string m_vName ;                //done
 } VStruct;
 
 typedef struct
 {
-    vector<int> m_fVertices;
-    int m_heIndex ;
-    string m_fName;
+    vector<int> m_fVertices ;       //done
+    int m_oneHeIndex ;                 
+    string m_fName;                 //done
 } FStruct;
 
 struct OBJFile{
@@ -45,13 +45,14 @@ struct OBJFile{
         string line;
         int verticesCounter = 0;
         int facesCounter = 0;
+        int heCounter = 0;
 
         //adding an empty vertex to the index 0
         VStruct* nullV = nullptr;
         m_tabVertices.push_back(nullV);
 
         ifstream myfile(this->m_filePath);
-        
+
         if(myfile.is_open()){
             while(getline(myfile, line)){
                 char carLine;
@@ -64,39 +65,41 @@ struct OBJFile{
 
                     VStruct* vertex = new VStruct(); 
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z; 
+
                     vertex->m_vName = "v" + to_string(verticesCounter);
                     m_tabVertices.push_back(vertex);
-
-                    this->printVertex(vertex); 
                 }
                 
                 if(carLine == 'f'){
                     FStruct* face = new FStruct();
+                    face->m_fName = "f" + to_string(facesCounter);
+                    m_tabFaces.push_back(face);
+
                     int vertexIndex;
                     while(istr >> vertexIndex){
                         face->m_fVertices.push_back(vertexIndex);
                         
                         //each time we find a new vertex in a face, we create an he
                         HeStruct* he = new HeStruct();
-                        //he->m_faceIndex = face->m_fVertices.at(facesCounter);
-                        he->m_vIndex = vertexIndex;
                         m_tabHalfEdges.push_back(he);
 
-                        this->printHe(he);
-                    }
-                    m_tabFaces.push_back(face);
+                        he->m_faceIndex = facesCounter;
+                        he->m_vIndex = vertexIndex;
 
-                    /*cout << "f" << facesCounter << " : ";
-                    for(int i = 0; i < face->m_fVertices.size(); i++){
-                        cout << face->m_fVertices.at(i) << " ";
+                        m_tabVertices.at(vertexIndex)->m_heIndex = heCounter;
+
+                        heCounter++;
                     }
-                    cout << endl;*/
                     facesCounter++;
                 }
             }
             myfile.close();
         }
         else cout << "Unable to open file" << endl;
+
+        this->printVertices();
+        this->printFaces();
+        this->printHalfEdges();
 
         this->constructTopology();
     }
@@ -123,7 +126,7 @@ struct OBJFile{
         }*/
     }
 
-    inline void printHe(const HeStruct* he){
+    inline void printHalfEdge(const HeStruct* he){
         if(he){
             cout << "--------" << he->m_heName << "--------" << endl;
             cout << "vertexIndex: "     << he->m_vIndex         << endl;
@@ -143,7 +146,7 @@ struct OBJFile{
         if(face){
 
             cout << "--------" << face->m_fName << "--------"   << endl;
-            cout << "OneHeIndex: "     << face->m_heIndex       << endl;
+            cout << "OneHeIndex: "     << face->m_oneHeIndex       << endl;
             cout << "Vertices: "                                << endl;
             for(int vertexIndex : face->m_fVertices){
                 cout << vertexIndex << " "; 
@@ -168,6 +171,25 @@ struct OBJFile{
 
         }else{
             cout << "Vertex pointer is nullptr" << endl;
+        }
+    }
+
+    inline void printHalfEdges(){
+        for(HeStruct* he : this->m_tabHalfEdges){
+            printHalfEdge(he);
+        }
+    }
+
+    inline void printFaces(){
+        for(FStruct* face : this->m_tabFaces){
+            printFace(face);
+        }
+    }
+
+    inline void printVertices(){
+        //to not print the empty vertex at the first index
+        for(int i = 1; i <= this->m_tabVertices.size(); i++){
+            printVertex(this->m_tabVertices.at(i));
         }
     }
 };
