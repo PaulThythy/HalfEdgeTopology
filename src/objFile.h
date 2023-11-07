@@ -81,6 +81,9 @@ struct OBJFile{
                         //each time we find a new vertex in a face, we create an he
                         HeStruct* he = new HeStruct();
                         he->m_heName = "e" + to_string(heCounter);
+                        he->m_heTwinIndex = -1;
+                        he->m_heNextIndex = -1;
+                        he->m_hePrevIndex = -1;
                         m_tabHalfEdges.push_back(he);
 
                         he->m_faceIndex = facesCounter;
@@ -106,17 +109,75 @@ struct OBJFile{
         this->constructTopology();
     }
 
-    inline void constructTopology(){
-        for(FStruct* face : m_tabFaces){
-            for(int i = 0; i < face->m_fVertices.size(); i++){
+    inline void constructTopology() {
+        // Initialize next and previous he
+        for (FStruct* face : m_tabFaces) {
+            vector<int>& vertices = face->m_fVertices;
+            int numVertices = static_cast<int>(vertices.size());
 
-                int indexV1 = face->m_fVertices.at(i);
-                int indexV2 = face->m_fVertices.at((i+1) % face->m_fVertices.size());
+            for (int i = 0; i < numVertices; i++) {
+                int currentVertexIndex = vertices[i];
+                int nextVertexIndex = vertices[(i + 1) % numVertices];
 
+                cout << "-----------------" << endl;
+                cout << currentVertexIndex << endl;
+                cout << nextVertexIndex << endl;
+                cout << "-----------------" << endl;
 
+                int currentHeIndex = m_tabVertices.at(currentVertexIndex)->m_heIndex;
+                int nextHeIndex = m_tabVertices.at(nextVertexIndex)->m_heIndex;
+
+                cout << "-----------------" << endl;
+                cout << currentHeIndex << endl;
+                cout << nextHeIndex << endl;
+                cout << "-----------------" << endl;
+
+                HeStruct* currentHe = m_tabHalfEdges.at(currentHeIndex);
+                HeStruct* nextHe = m_tabHalfEdges.at(nextHeIndex);
+
+                currentHe->m_heNextIndex = nextHeIndex;
+                nextHe->m_hePrevIndex = currentHeIndex;
             }
         }
+
+        // Initialize twin he
+        /*for (FStruct* face : m_tabFaces) {
+            vector<int>& vertices = face->m_fVertices;
+            int numVertices = static_cast<int>(vertices.size());
+
+            for (int i = 0; i < numVertices; i++) {
+                int currentVertexIndex = vertices[i];
+                int nextVertexIndex = vertices[(i + 1) % numVertices];
+
+                int currentHeIndex = m_tabVertices.at(currentVertexIndex)->m_heIndex;
+                int nextHeIndex = m_tabVertices.at(nextVertexIndex)->m_heIndex;
+
+                HeStruct* currentHe = m_tabHalfEdges.at(currentHeIndex);
+                HeStruct* nextHe = m_tabHalfEdges.at(nextHeIndex);
+
+                if (currentHe->m_heTwinIndex == -1) {
+                    for (int j = 0; j < numVertices; j++) {
+                        if (i != j) {
+                            int potentialTwinIndex = m_tabVertices.at(vertices[j])->m_heIndex;
+                            HeStruct* potentialTwinHe = m_tabHalfEdges.at(potentialTwinIndex);
+
+                            if (potentialTwinHe->m_vIndex == nextVertexIndex) {
+                                currentHe->m_heTwinIndex = potentialTwinIndex;
+                                potentialTwinHe->m_heTwinIndex = currentHeIndex;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+
+        this->printVertices();
+        this->printFaces();
+        this->printHalfEdges();
     }
+
+    
 
     inline void printHalfEdge(const HeStruct* he){
         if(he){
