@@ -6,6 +6,8 @@
 #include <sstream>
 #include <fstream>
 
+#include <GL/glut.h>
+
 using namespace std;
 
 typedef struct
@@ -204,6 +206,14 @@ struct OBJFile
         this->printVertices();
         this->printFaces();
         this->printHalfEdges();
+    }
+
+    inline void displayMeshEdges(){
+        
+    }
+
+    inline void displayHalfEdges(){
+        
     }
 
     inline vector<int> getHalfEdgesFromFace(int faceIndex)
