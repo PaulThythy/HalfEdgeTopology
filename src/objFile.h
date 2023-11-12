@@ -204,6 +204,7 @@ struct OBJFile
             }
         }
 
+        numHalfEdges = static_cast<int>(m_tabHalfEdges.size());
         // Set next and prev for ghost halfedges
         // I wanted to use the function getHalfEdgesFromFace(-1) to loop over ghost he, 
         // but I think it will be a problem for indexes
@@ -215,10 +216,9 @@ struct OBJFile
                 for(int i = 0; i < numHalfEdges; i++){
                     HeStruct* potentialNext = m_tabHalfEdges.at(i);
 
-                    if(potentialNext->m_faceIndex == -1 && currentHe != potentialNext){
+                    if(potentialNext->m_faceIndex == -1){
                         
-                        if( potentialNext->m_vIndex == endVertexIndex &&
-                            currentHe->m_heNextIndex == -1){
+                        if( potentialNext->m_vIndex == endVertexIndex){
                             
                             currentHe->m_heNextIndex = i;
                         }
@@ -228,12 +228,11 @@ struct OBJFile
                 for(int i = 0; i < numHalfEdges; i++){
                     HeStruct* potentialPrev = m_tabHalfEdges.at(i);
 
-                    if(potentialPrev->m_faceIndex == -1 && currentHe != potentialPrev){
+                    if(potentialPrev->m_faceIndex == -1){
 
                         int endVertexIndexPotentialPrev = m_tabHalfEdges.at(potentialPrev->m_heTwinIndex)->m_vIndex;
 
-                        if( endVertexIndexPotentialPrev == startVertexIndex && 
-                            currentHe->m_hePrevIndex == -1){
+                        if(endVertexIndexPotentialPrev == startVertexIndex){
                             
                             currentHe->m_hePrevIndex = i;
                         }
