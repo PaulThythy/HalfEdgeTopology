@@ -10,33 +10,33 @@ using namespace std;
 
 typedef struct
 {
-    int m_vIndex; // done
-    int m_heTwinIndex;
-    int m_faceIndex; // done
-    int m_heNextIndex;
-    int m_hePrevIndex;
-    string m_heName; // done
+    int m_vIndex ;
+    int m_heTwinIndex ;
+    int m_faceIndex ; 
+    int m_heNextIndex ;
+    int m_hePrevIndex ;
+    string m_heName ;
 } HeStruct;
 
 typedef struct
 {
-    double m_x, m_y, m_z; // done
-    int m_heIndex;        // done
-    string m_vName;       // done
+    double m_x, m_y, m_z ; 
+    int m_heIndex ;        
+    string m_vName ;      
 } VStruct;
 
 typedef struct
 {
-    vector<int> m_fVertices; // done
-    int m_oneHeIndex;        // done
-    string m_fName;          // done
+    vector<int> m_fVertices ;
+    int m_oneHeIndex ;
+    string m_fName ;
 } FStruct;
 
 struct OBJFile
 {
-    vector<HeStruct *> m_tabHalfEdges;
-    vector<FStruct *> m_tabFaces;
-    vector<VStruct *> m_tabVertices;
+    vector<HeStruct*> m_tabHalfEdges;
+    vector<FStruct*> m_tabFaces;
+    vector<VStruct*> m_tabVertices;
     string m_filePath;
 
     inline OBJFile(string filePath) : m_filePath(filePath) {}
@@ -67,7 +67,7 @@ struct OBJFile
                 {
                     verticesCounter++;
 
-                    VStruct *vertex = new VStruct();
+                    VStruct* vertex = new VStruct();
                     istr >> vertex->m_x >> vertex->m_y >> vertex->m_z;
                     vertex->m_vName = "v" + to_string(verticesCounter);
                     vertex->m_heIndex = -1; // to be update later
@@ -76,7 +76,7 @@ struct OBJFile
 
                 if (carLine == 'f')
                 {
-                    FStruct *face = new FStruct();
+                    FStruct* face = new FStruct();
                     face->m_fName = "f" + to_string(facesCounter);
                     face->m_oneHeIndex = -1; // to be update later
                     m_tabFaces.push_back(face);
@@ -102,7 +102,7 @@ struct OBJFile
         int numHe = 0;
         int numFaces = 0;
         // Iterate over faces to create half-edges and update vertex information
-        for (FStruct *face : m_tabFaces)
+        for (FStruct* face : m_tabFaces)
         {
             vector<int> &vertices = face->m_fVertices;
             int numVertices = static_cast<int>(vertices.size());
@@ -113,7 +113,7 @@ struct OBJFile
                 int startVertexIndex = vertices[i];
                 int endVertexIndex = vertices[(i + 1) % numVertices];
 
-                HeStruct *halfEdge = new HeStruct();
+                HeStruct* halfEdge = new HeStruct();
                 halfEdge->m_vIndex = startVertexIndex;
                 halfEdge->m_heName = "e" + to_string(numHe);
                 halfEdge->m_faceIndex = numFaces;
@@ -142,19 +142,18 @@ struct OBJFile
             numFaces++;
         }
 
-        // Initialize next and previous by iterating over faces
-        for (FStruct *face : m_tabFaces)
-        {
-            int numVertices = static_cast<int>(face->m_fVertices.size());
+        // Initialize next and previous by iterating over halfedges of a face
+        for(int i = 0; i < m_tabFaces.size(); i++){
+            int numberHalfEdges = static_cast<int>(getHalfEdgesFromFace(i).size());
 
-            // Iterate over each triplets of consecutive vertices in the face
-            for (int i = 0; i < numVertices; i++)
-            {
-                int currentVertexIndex = face->m_fVertices[i];
-                int nextVertexIndex = face->m_fVertices[(i + 1) % numVertices];
-                int prevVertexIndex = face->m_fVertices[(i - 1 + numVertices) % numVertices];
+            for(int j = 0; j < numberHalfEdges; j++){
+                int currentHeIndex  = getHalfEdgesFromFace(i).at(j);
+                int nextHeIndex     = getHalfEdgesFromFace(i).at((j + 1) % numberHalfEdges);
+                int prevHeIndex     = getHalfEdgesFromFace(i).at((j - 1 + numberHalfEdges) % numberHalfEdges);
 
-                
+                HeStruct* currentHe         = m_tabHalfEdges.at(currentHeIndex);
+                currentHe->m_heNextIndex    = nextHeIndex;
+                currentHe->m_hePrevIndex    = prevHeIndex;
             }
         }
 
@@ -163,14 +162,25 @@ struct OBJFile
         this->printHalfEdges();
     }
 
-    inline void printHalfEdge(const HeStruct *he)
+    inline vector<int> getHalfEdgesFromFace(int faceIndex)
+    {
+        vector<int> listHe;
+        for(int i = 0; i < m_tabHalfEdges.size(); i++){
+            if(m_tabHalfEdges.at(i)->m_faceIndex == faceIndex){
+                listHe.push_back(i);
+            }
+        }
+        return listHe;
+    }
+
+    inline void printHalfEdge(const HeStruct* he)
     {
         if (he)
         {
             cout << "--------" << he->m_heName << "--------" << endl;
             cout << "vertexIndex: " << he->m_vIndex << endl;
             cout << "faceIndex: " << he->m_faceIndex << endl;
-            cout << "nextHeIndex: " << he->m_heTwinIndex << endl;
+            cout << "nextHeIndex: " << he->m_heNextIndex << endl;
             cout << "previousHeIndex: " << he->m_hePrevIndex << endl;
             cout << "twinHeIndex: " << he->m_heTwinIndex << endl;
             cout << "--------------------------------------" << endl;
@@ -182,7 +192,7 @@ struct OBJFile
         }
     }
 
-    inline void printFace(const FStruct *face)
+    inline void printFace(const FStruct* face)
     {
         if (face)
         {
@@ -204,7 +214,7 @@ struct OBJFile
         }
     }
 
-    inline void printVertex(const VStruct *vertex)
+    inline void printVertex(const VStruct* vertex)
     {
         if (vertex)
         {
