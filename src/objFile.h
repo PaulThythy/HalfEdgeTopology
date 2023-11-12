@@ -196,10 +196,49 @@ struct OBJFile
                 // to be update later
                 ghostHe->m_heNextIndex  = -1;
                 ghostHe->m_hePrevIndex  = -1;
-                ghostHe->m_heTwinIndex  = -1;
+                ghostHe->m_heTwinIndex  = m_tabHalfEdges.at(currentHe->m_heNextIndex)->m_hePrevIndex;
+                m_tabHalfEdges.at(m_tabHalfEdges.at(currentHe->m_heNextIndex)->m_hePrevIndex)->m_heTwinIndex = numHalfEdges + numGhostHe; 
 
                 m_tabHalfEdges.push_back(ghostHe);
                 numGhostHe++;
+            }
+        }
+
+        // Set next and prev for ghost halfedges
+        // I wanted to use the function getHalfEdgesFromFace(-1) to loop over ghost he, 
+        // but I think it will be a problem for indexes
+        for(HeStruct* currentHe : m_tabHalfEdges){
+            if(currentHe->m_faceIndex == -1){
+                int startVertexIndex    = currentHe->m_vIndex;
+                int endVertexIndex      = m_tabHalfEdges.at(currentHe->m_heTwinIndex)->m_vIndex;
+
+                for(int i = 0; i < numHalfEdges; i++){
+                    HeStruct* potentialNext = m_tabHalfEdges.at(i);
+
+                    if(potentialNext->m_faceIndex == -1 && currentHe != potentialNext){
+                        
+                        if( potentialNext->m_vIndex == endVertexIndex &&
+                            currentHe->m_heNextIndex == -1){
+                            
+                            currentHe->m_heNextIndex = i;
+                        }
+                    }
+                }
+
+                for(int i = 0; i < numHalfEdges; i++){
+                    HeStruct* potentialPrev = m_tabHalfEdges.at(i);
+
+                    if(potentialPrev->m_faceIndex == -1 && currentHe != potentialPrev){
+
+                        int endVertexIndexPotentialPrev = m_tabHalfEdges.at(potentialPrev->m_heTwinIndex)->m_vIndex;
+
+                        if( endVertexIndexPotentialPrev == startVertexIndex && 
+                            currentHe->m_hePrevIndex == -1){
+                            
+                            currentHe->m_hePrevIndex = i;
+                        }
+                    }
+                }
             }
         }
 

@@ -300,6 +300,10 @@ void display(void)
     //displayHalfEdge();
     //--------------------------------
     //displayMeshEdges();
+    //--------------------------------
+    //objFile->displayMeshEdges();
+    //--------------------------------
+    //objFile->displayHalfEdges();
 
     glPopMatrix();
     /* force result display */
