@@ -177,8 +177,29 @@ struct OBJFile
             }
         }
 
-        // Set phantom halfedges by iterating over halfedges
+        int numGhostHe = 0;
+        int numHalfEdges = static_cast<int>(m_tabHalfEdges.size());
         
+        // Set ghost halfedges by iterating over halfedges
+        for(int i = 0; i < numHalfEdges; i++){
+            HeStruct* currentHe = m_tabHalfEdges.at(i);
+
+            // Check if the he doesn't have a twin (i.e., it's a boundary edge)
+            if(currentHe->m_heTwinIndex == -1){
+                HeStruct* ghostHe = new HeStruct();
+
+                ghostHe->m_heName       = "e" + to_string(numHalfEdges + numGhostHe);
+                ghostHe->m_faceIndex    = -1;
+                ghostHe->m_vIndex       = m_tabHalfEdges.at(currentHe->m_heNextIndex)->m_vIndex;
+                // to be update later
+                ghostHe->m_heNextIndex  = -1;
+                ghostHe->m_hePrevIndex  = -1;
+                ghostHe->m_heTwinIndex  = -1;
+
+                m_tabHalfEdges.push_back(ghostHe);
+                numGhostHe++;
+            }
+        }
 
         this->printVertices();
         this->printFaces();
