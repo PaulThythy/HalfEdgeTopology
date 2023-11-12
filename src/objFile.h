@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 #include <GL/glut.h>
 
@@ -247,11 +248,53 @@ struct OBJFile
     }
 
     inline void displayMeshEdges(){
-        
+        for(HeStruct* he : m_tabHalfEdges){
+            if(he->m_faceIndex == -1){
+
+                int indexV1 = he->m_vIndex;
+                int indexV2 = m_tabHalfEdges.at(he->m_heNextIndex)->m_vIndex;
+
+                VStruct* v1 = m_tabVertices.at(indexV1);
+                VStruct* v2 = m_tabVertices.at(indexV2);
+
+                glBegin(GL_LINES);
+                glColor3f(1.0, 0.0, 0.0);
+                glVertex3f(v1->m_x, v1->m_y, v1->m_z);
+                glVertex3f(v2->m_x, v2->m_y, v2->m_z);
+                glEnd();
+            }
+        }
     }
 
     inline void displayHalfEdges(){
-        
+        vector<HeStruct*> visitedHes;
+
+        for(const FStruct* face : m_tabFaces){
+            if(face != nullptr){
+                HeStruct* startHe = m_tabHalfEdges.at(face->m_oneHeIndex);
+                HeStruct* currentHe = startHe;
+
+                do{
+                    //if the twin of the current he has not been visited, we draw the current he
+                    if( find(visitedHes.begin(), visitedHes.end(), m_tabHalfEdges.at(currentHe->m_heTwinIndex)) == visitedHes.end() ){
+                        
+                        //add current he into the list
+                        visitedHes.push_back(currentHe);
+
+                        VStruct* v1 = m_tabVertices.at(currentHe->m_vIndex);
+                        VStruct* v2 = m_tabVertices.at(m_tabHalfEdges.at(currentHe->m_heNextIndex)->m_vIndex);
+
+                        glBegin(GL_LINES);
+                        glVertex3d(v1->m_x, v1->m_y, v1->m_z);
+                        glVertex3d(v2->m_x, v2->m_y, v2->m_z);
+                        glEnd();
+                    }
+
+                    currentHe = m_tabHalfEdges.at(currentHe->m_heNextIndex);
+                }while(currentHe!=startHe);                 //while current he different from start he
+            }
+            
+        }
     }
 
     inline vector<int> getHalfEdgesFromFace(int faceIndex)
