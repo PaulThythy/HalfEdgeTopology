@@ -1,6 +1,6 @@
 # HalfEdgeTopology
 
-##Compile and launch the project
+## Compile and launch the project
 To excute project, first run this command line to install depedencies :
 
 ```sh
