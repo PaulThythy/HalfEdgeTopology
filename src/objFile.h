@@ -142,7 +142,7 @@ struct OBJFile
             numFaces++;
         }
 
-        // Initialize next and previous by iterating over halfedges of a face
+        // Set next and previous by iterating over halfedges of a face
         for(int i = 0; i < m_tabFaces.size(); i++){
             int numberHalfEdges = static_cast<int>(getHalfEdgesFromFace(i).size());
 
@@ -156,6 +156,29 @@ struct OBJFile
                 currentHe->m_hePrevIndex    = prevHeIndex;
             }
         }
+
+        // Set twins by iterating over halfedges
+        for(int i = 0; i < m_tabHalfEdges.size(); i++){
+            HeStruct* currentHe = m_tabHalfEdges.at(i);
+
+            int startVertexIndex = currentHe->m_vIndex;
+            int endVertexIndex   = m_tabHalfEdges.at(currentHe->m_heNextIndex)->m_vIndex; 
+        
+            for(int j = 0; j < m_tabHalfEdges.size(); j++){
+                HeStruct* potentialTwin = m_tabHalfEdges.at(j);
+
+                if( potentialTwin->m_vIndex == endVertexIndex && 
+                    m_tabHalfEdges.at(potentialTwin->m_heNextIndex)->m_vIndex == startVertexIndex &&
+                    potentialTwin->m_heTwinIndex == -1){
+
+                    currentHe->m_heTwinIndex = j;
+                    potentialTwin->m_heTwinIndex = i;
+                }
+            }
+        }
+
+        // Set phantom halfedges by iterating over halfedges
+        
 
         this->printVertices();
         this->printFaces();
